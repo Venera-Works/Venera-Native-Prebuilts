@@ -55,6 +55,10 @@ Remove-Item Env:PRIVATE_KEY
 
 For Android, also pass `--android-sdk-location`, `--android-ndk-version 28.0.13004108`, and `--android-min-sdk-version 21`. Repeat `--target` to select multiple architectures. Apple builds require Xcode 16.4. Run from the preparation script's `tool_dir` so Cargokit can locate the Rust version lock at the repository root.
 
+Preparation preserves the complete upstream Cargokit directory, including `run_build_tool.sh` and `run_build_tool.cmd` alongside `build_tool`, and makes the Unix launcher executable. Android Rust linking invokes NDK Clang through these launchers; `build_tool` relies on this relative directory layout.
+
+For local Android cross-compilation on Windows, set `FLUTTER_ROOT` to the FVM Flutter SDK directory (for example, the project's `.fvm/flutter_sdk`); the upstream `.cmd` launcher uses it to locate Dart.
+
 Run the following command from the repository root to check the complete platform set. After building only one platform, it reports the other targets as missing:
 
 ```powershell

@@ -8,7 +8,7 @@ Capabilities:
 - Verifies SHA256 against rhttp/lock.json
 - Safely extracts archive into build/package
 - Copies rhttp/cargokit.yaml into build/package/rust/cargokit.yaml
-- Copies upstream cargokit/build_tool to build/rhttp/build/build_tool
+- Copies upstream cargokit to build/rhttp/build, preserving the linker launchers
 - Copies tool/build_rhttp.dart to build/rhttp/build/build_tool/bin/venera_precompile.dart
 - Computes Cargokit CrateHash from manifest_dir
 - Emits manifest_dir, tool_dir, crate_hash, release_tag, flutter_version, dart_version to stdout & GITHUB_OUTPUT
@@ -240,19 +240,21 @@ def prepare(repo_root: Path) -> dict:
     print(f"Copying cargokit.yaml -> {cargokit_yaml_dst}")
     shutil.copy2(cargokit_yaml_src, cargokit_yaml_dst)
 
-    # Copy upstream cargokit/build_tool to build/rhttp/build/build_tool
+    # AndroidEnvironment resolves the linker launcher next to build_tool.
     upstream_build_tool = package_dir / "cargokit" / "build_tool"
     if not upstream_build_tool.is_dir():
         raise FileNotFoundError(
             f"Upstream cargokit build_tool not found at: {upstream_build_tool}"
         )
 
-    tool_dir = repo_root / "build" / "rhttp" / "build" / "build_tool"
-    if tool_dir.exists():
-        shutil.rmtree(tool_dir)
-    tool_dir.parent.mkdir(parents=True, exist_ok=True)
-    print(f"Copying Cargokit build_tool -> {tool_dir}")
-    shutil.copytree(upstream_build_tool, tool_dir)
+    cargokit_dir = repo_root / "build" / "rhttp" / "build"
+    tool_dir = cargokit_dir / "build_tool"
+    if cargokit_dir.exists():
+        shutil.rmtree(cargokit_dir)
+    cargokit_dir.parent.mkdir(parents=True, exist_ok=True)
+    print(f"Copying complete Cargokit layout -> {cargokit_dir}")
+    shutil.copytree(upstream_build_tool.parent, cargokit_dir)
+    (cargokit_dir / "run_build_tool.sh").chmod(0o755)
 
     # Copy tool/build_rhttp.dart to tool_dir/bin/venera_precompile.dart
     venera_precompile_src = repo_root / "tool" / "build_rhttp.dart"

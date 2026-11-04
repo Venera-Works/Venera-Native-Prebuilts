@@ -55,6 +55,10 @@ Remove-Item Env:PRIVATE_KEY
 
 Android 构建额外传入 `--android-sdk-location`、`--android-ndk-version 28.0.13004108`、`--android-min-sdk-version 21`；`--target` 可重复指定。Apple 构建需使用 Xcode 16.4。准备脚本输出的 `tool_dir` 是必要工作目录，Cargokit 据此读取仓库根目录的 Rust 版本锁。
 
+准备脚本保留上游完整的 Cargokit 目录，包括与 `build_tool` 同级的 `run_build_tool.sh`、`run_build_tool.cmd`，并设置 Unix 入口的可执行权限。Android 的 Rust 链接阶段通过这些入口调用 NDK Clang；`build_tool` 依赖这套相对目录结构。
+
+Windows 本地交叉编译 Android 时，还需将 `FLUTTER_ROOT` 指向 FVM 的 Flutter SDK 目录（例如项目的 `.fvm/flutter_sdk`）；上游 `.cmd` 入口使用它定位 Dart。
+
 在仓库根目录运行以下命令可检查全平台文件完整性；仅构建单个平台时，检查会报告尚缺的其他目标：
 
 ```powershell
