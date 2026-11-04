@@ -4,7 +4,7 @@
 
 Builds and releases the `rhttp 0.15.1` native libraries used by [Venera-Plus](https://github.com/Venera-Works/Venera-Plus). Application builds use Cargokit to download artifacts by source hash and verify their Ed25519 signatures. Missing or invalid artifacts fail instead of compiling rhttp locally.
 
-`rhttp/lock.json` pins the source archive SHA-256, Flutter 3.41.4, Rust 1.85.1, FRB 2.11.1, Android NDK 28.0.13004108, and minimum API 21. `rhttp/cargokit.yaml` pins the public key, release URL, and `cargo --locked` arguments.
+`rhttp/lock.json` pins the source archive SHA-256, Dart 3.11.1 (matching the application's Flutter 3.41.4), Rust 1.85.1, FRB 2.11.1, Android NDK 28.0.13004108, and minimum API 21. `rhttp/cargokit.yaml` pins the public key, release URL, and `cargo --locked` arguments.
 
 ## Build platforms
 
@@ -30,6 +30,8 @@ Get-Content -Raw .git/rhttp-prebuilt-private-key |
 ```
 
 After pushing to `main`, changes to source configuration, build tools, or the workflow trigger precompilation. The `预编译 rhttp 原生二进制` workflow can also be dispatched manually. Five build jobs compile, sign, and upload Workflow Artifacts; only the final publishing job has `contents: write` permission.
+
+CI installs only the pinned standalone Dart SDK and selects x64 or ARM64 to match the runner. Native precompilation does not require the Flutter SDK; Flutter 3.41.4 stable has no Linux ARM64 release archive, so its setup step cannot be used on that runner. The preparation script reads the SDK version from `rhttp/lock.json` for all five platforms.
 
 Once every platform succeeds, publishing checks that all files exist, binaries are nonempty, and signatures contain 64 bytes. It uploads to a draft Release and publishes only after every upload succeeds. The compiler verifies each signature when generating it. Published releases are not overwritten; an incomplete draft can be completed by rerunning. One concurrency group prevents branches from publishing the same source hash simultaneously.
 

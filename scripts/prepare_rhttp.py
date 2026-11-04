@@ -11,7 +11,7 @@ Capabilities:
 - Copies upstream cargokit/build_tool to build/rhttp/build/build_tool
 - Copies tool/build_rhttp.dart to build/rhttp/build/build_tool/bin/venera_precompile.dart
 - Computes Cargokit CrateHash from manifest_dir
-- Emits manifest_dir, tool_dir, crate_hash, release_tag, flutter_version to stdout & GITHUB_OUTPUT
+- Emits manifest_dir, tool_dir, crate_hash, release_tag, flutter_version, dart_version to stdout & GITHUB_OUTPUT
 - Standalone integrity verification via --check-output <dist_dir>
 """
 
@@ -178,6 +178,7 @@ def prepare(repo_root: Path) -> dict:
     version = lock_data["version"]
     expected_sha256 = lock_data["archiveSha256"]
     flutter_version = lock_data["flutterVersion"]
+    dart_version = lock_data["dartVersion"]
 
     cache_dir = repo_root / "build" / "cache"
     cache_dir.mkdir(parents=True, exist_ok=True)
@@ -275,6 +276,7 @@ def prepare(repo_root: Path) -> dict:
         "crate_hash": crate_hash,
         "release_tag": release_tag,
         "flutter_version": flutter_version,
+        "dart_version": dart_version,
     }
 
     print("--- Preparation Info ---")

@@ -29,12 +29,14 @@ jobs:
     timeout-minutes: 60
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - name: 配置 Flutter
-        uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
+      - name: 准备 rhttp 源码与 Cargokit 构建工具
+        id: prepare
+        run: python3 scripts/prepare_rhttp.py
+      - name: 配置 Dart
+        uses: dart-lang/setup-dart@6afc89df92d6eb3834022f73cd65adc8cdfcb92d # v1
         with:
-          channel: "stable"
-          flutter-version: "3.41.4"
-          cache: true
+          sdk: ${{ steps.prepare.outputs.dart_version }}
+          architecture: ${{ runner.arch == 'ARM64' && 'arm64' || 'x64' }}
       - name: 配置 Rust 1.85.1 及 Android 目标架构
         run: |
           rustup toolchain install 1.85.1 --profile minimal
@@ -51,9 +53,6 @@ jobs:
           if [ ! -d "$ANDROID_SDK_ROOT/ndk/28.0.13004108" ]; then
             echo "y" | "$ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager" --install "ndk;28.0.13004108"
           fi
-      - name: 准备 rhttp 源码与 Cargokit 构建工具
-        id: prepare
-        run: python3 scripts/prepare_rhttp.py
       - name: 安装 Cargokit 构建工具依赖
         working-directory: ${{ steps.prepare.outputs.tool_dir }}
         run: dart pub get --enforce-lockfile
@@ -86,22 +85,21 @@ jobs:
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - name: 配置 Flutter
-        uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
+      - name: 准备 rhttp 源码与 Cargokit 构建工具
+        id: prepare
+        shell: bash
+        run: python scripts/prepare_rhttp.py
+      - name: 配置 Dart
+        uses: dart-lang/setup-dart@6afc89df92d6eb3834022f73cd65adc8cdfcb92d # v1
         with:
-          channel: "stable"
-          flutter-version: "3.41.4"
-          cache: true
+          sdk: ${{ steps.prepare.outputs.dart_version }}
+          architecture: ${{ runner.arch == 'ARM64' && 'arm64' || 'x64' }}
       - name: 配置 Rust 1.85.1 及 Windows 目标架构
         shell: bash
         run: |
           rustup toolchain install 1.85.1 --profile minimal
           rustup default 1.85.1
           rustup target add x86_64-pc-windows-msvc
-      - name: 准备 rhttp 源码与 Cargokit 构建工具
-        id: prepare
-        shell: bash
-        run: python scripts/prepare_rhttp.py
       - name: 安装 Cargokit 构建工具依赖
         working-directory: ${{ steps.prepare.outputs.tool_dir }}
         run: dart pub get --enforce-lockfile
@@ -129,20 +127,19 @@ jobs:
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - name: 配置 Flutter
-        uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
+      - name: 准备 rhttp 源码与 Cargokit 构建工具
+        id: prepare
+        run: python3 scripts/prepare_rhttp.py
+      - name: 配置 Dart
+        uses: dart-lang/setup-dart@6afc89df92d6eb3834022f73cd65adc8cdfcb92d # v1
         with:
-          channel: "stable"
-          flutter-version: "3.41.4"
-          cache: true
+          sdk: ${{ steps.prepare.outputs.dart_version }}
+          architecture: ${{ runner.arch == 'ARM64' && 'arm64' || 'x64' }}
       - name: 配置 Rust 1.85.1 及 Linux x64 目标架构
         run: |
           rustup toolchain install 1.85.1 --profile minimal
           rustup default 1.85.1
           rustup target add x86_64-unknown-linux-gnu
-      - name: 准备 rhttp 源码与 Cargokit 构建工具
-        id: prepare
-        run: python3 scripts/prepare_rhttp.py
       - name: 安装 Cargokit 构建工具依赖
         working-directory: ${{ steps.prepare.outputs.tool_dir }}
         run: dart pub get --enforce-lockfile
@@ -169,20 +166,19 @@ jobs:
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - name: 配置 Flutter
-        uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
+      - name: 准备 rhttp 源码与 Cargokit 构建工具
+        id: prepare
+        run: python3 scripts/prepare_rhttp.py
+      - name: 配置 Dart
+        uses: dart-lang/setup-dart@6afc89df92d6eb3834022f73cd65adc8cdfcb92d # v1
         with:
-          channel: "stable"
-          flutter-version: "3.41.4"
-          cache: true
+          sdk: ${{ steps.prepare.outputs.dart_version }}
+          architecture: ${{ runner.arch == 'ARM64' && 'arm64' || 'x64' }}
       - name: 配置 Rust 1.85.1 及 Linux arm64 目标架构
         run: |
           rustup toolchain install 1.85.1 --profile minimal
           rustup default 1.85.1
           rustup target add aarch64-unknown-linux-gnu
-      - name: 准备 rhttp 源码与 Cargokit 构建工具
-        id: prepare
-        run: python3 scripts/prepare_rhttp.py
       - name: 安装 Cargokit 构建工具依赖
         working-directory: ${{ steps.prepare.outputs.tool_dir }}
         run: dart pub get --enforce-lockfile
@@ -209,14 +205,16 @@ jobs:
     timeout-minutes: 60
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: 准备 rhttp 源码与 Cargokit 构建工具
+        id: prepare
+        run: python3 scripts/prepare_rhttp.py
       - name: 切换至 Xcode 16.4
         run: sudo xcode-select --switch /Applications/Xcode_16.4.app
-      - name: 配置 Flutter
-        uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
+      - name: 配置 Dart
+        uses: dart-lang/setup-dart@6afc89df92d6eb3834022f73cd65adc8cdfcb92d # v1
         with:
-          channel: "stable"
-          flutter-version: "3.41.4"
-          cache: true
+          sdk: ${{ steps.prepare.outputs.dart_version }}
+          architecture: ${{ runner.arch == 'ARM64' && 'arm64' || 'x64' }}
       - name: 配置 Rust 1.85.1 及 Apple 目标架构
         run: |
           rustup toolchain install 1.85.1 --profile minimal
@@ -227,9 +225,6 @@ jobs:
             aarch64-apple-ios \
             aarch64-apple-ios-sim \
             x86_64-apple-ios
-      - name: 准备 rhttp 源码与 Cargokit 构建工具
-        id: prepare
-        run: python3 scripts/prepare_rhttp.py
       - name: 安装 Cargokit 构建工具依赖
         working-directory: ${{ steps.prepare.outputs.tool_dir }}
         run: dart pub get --enforce-lockfile
@@ -289,7 +284,8 @@ jobs:
           - **包名与版本**: \`rhttp 0.15.1\`
           - **Cargokit CrateHash**: \`${{ steps.prepare.outputs.crate_hash }}\`
           - **Rust 工具链**: \`1.85.1\`
-          - **Flutter 版本**: \`${{ steps.prepare.outputs.flutter_version }}\`
+          - **Dart 工具链**: \`${{ steps.prepare.outputs.dart_version }}\`
+          - **应用 Flutter 版本**: \`${{ steps.prepare.outputs.flutter_version }}\`
           - **Android NDK**: \`28.0.13004108\` (Min SDK 21)
           - **Apple Xcode**: \`16.4\` (macOS 15)
           - **Glibc 基线**: Ubuntu 22.04 LTS (x64 / arm64)

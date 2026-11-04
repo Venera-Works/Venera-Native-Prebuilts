@@ -4,7 +4,7 @@
 
 为 [Venera-Plus](https://github.com/Venera-Works/Venera-Plus) 预编译并发布 `rhttp 0.15.1` 原生库。应用构建通过 Cargokit 按源码 hash 下载产物并验证 Ed25519 签名，缺包或验签失败时停止，不再现场编译 rhttp。
 
-`rhttp/lock.json` 固定源归档 SHA-256、Flutter 3.41.4、Rust 1.85.1、FRB 2.11.1、Android NDK 28.0.13004108 和最低 API 21。`rhttp/cargokit.yaml` 固定公钥、发布地址及 `cargo --locked` 参数。
+`rhttp/lock.json` 固定源归档 SHA-256、Dart 3.11.1（对应应用 Flutter 3.41.4）、Rust 1.85.1、FRB 2.11.1、Android NDK 28.0.13004108 和最低 API 21。`rhttp/cargokit.yaml` 固定公钥、发布地址及 `cargo --locked` 参数。
 
 ## 构建平台
 
@@ -30,6 +30,8 @@ Get-Content -Raw .git/rhttp-prebuilt-private-key |
 ```
 
 将代码推送到 `main` 后，相关源码配置、构建工具或工作流变化会触发预编译；也可手动运行 `预编译 rhttp 原生二进制`。五个平台任务只编译、签名并上传 Workflow Artifacts，只有最终发布任务具有 `contents: write` 权限。
+
+CI 只安装锁定版本的独立 Dart SDK，并按运行器架构选择 x64 或 ARM64。原生预编译工具不需要 Flutter SDK；Flutter 3.41.4 stable 没有 Linux ARM64 发布包，因此不能在该运行器上使用 Flutter 安装步骤。SDK 版本由准备脚本从 `rhttp/lock.json` 输出，五个平台使用同一配置。
 
 发布任务在全部平台成功后检查文件是否齐全、二进制非空、签名文件为 64 字节，先上传至草稿 Release，全部上传成功后再公开。编译器在生成每份产物时验证其签名。公开发布不会被后续运行覆盖，未完成的草稿可以重跑补齐。所有运行使用同一并发组，避免不同分支同时发布相同源码 hash。
 
