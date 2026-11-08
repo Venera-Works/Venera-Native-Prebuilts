@@ -6,6 +6,8 @@
 
 `rhttp/lock.json` 固定源归档 SHA-256、Dart 3.11.1（对应应用 Flutter 3.41.4）、Rust 1.85.1、FRB 2.11.1、Android NDK 28.0.13004108 和最低 API 21。`rhttp/cargokit.yaml` 固定公钥、发布地址及 `cargo --locked` 参数。
 
+`rhttp/Cargo.toml` 与 `rhttp/Cargo.lock` 将 Rust 桥接运行库及宏固定到上游提交 [`d59f05b6b0da3606933385f80cbd9e21cc35b59c`](https://github.com/fzyzcjy/flutter_rust_bridge/commit/d59f05b6b0da3606933385f80cbd9e21cc35b59c)，保持 `2.11.1` 版本，修复取消请求后迟到的 Dart 回调触发原生崩溃。准备脚本解压并验证上游包后应用这两份文件，再计算新的源码 hash；其余依赖沿用原锁定版本。
+
 ## 构建平台
 
 | 构建环境 | Rust targets | 原生文件 |
@@ -69,7 +71,7 @@ python scripts/prepare_rhttp.py --check-output dist
 
 1. 更新 `rhttp/lock.json`、`rhttp/cargokit.yaml`，以及对应的 SDK、Rust 和工作流配置。
 2. 用固定 SDK 和 `pub.dev` 验证上游工具依赖锁及原生构建。
-3. 将 `lock.json`、`cargokit.yaml` 同步到主项目的 `native/prebuilts/rhttp/`，并更新主项目准备脚本中对应上游 Cargokit 源文件的摘要。
+3. 将 `lock.json`、`cargokit.yaml`、`Cargo.toml` 与 `Cargo.lock` 同步到主项目的 `native/prebuilts/rhttp/`，并在升级 Cargokit 时更新主项目准备脚本中对应源文件的摘要。
 4. 先发布本仓库全部目标的 `precompiled_<crateHash>`，再运行主项目构建。源码、Cargo 锁、构建参数或公钥变化会改变 hash。
 
 主项目在 `flutter pub get` 之后运行 `dart tool/prepare_rhttp_prebuilt.dart`，配置已解析的包并禁用 rhttp 的源码回退。主项目本地开发使用项目专用 `.pub-cache`；详见其构建文档。正常应用包仍由主项目构建与签名。

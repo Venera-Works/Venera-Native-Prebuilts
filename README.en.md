@@ -6,6 +6,8 @@ Builds and releases the `rhttp 0.15.1` native libraries used by [Venera-Plus](ht
 
 `rhttp/lock.json` pins the source archive SHA-256, Dart 3.11.1 (matching the application's Flutter 3.41.4), Rust 1.85.1, FRB 2.11.1, Android NDK 28.0.13004108, and minimum API 21. `rhttp/cargokit.yaml` pins the public key, release URL, and `cargo --locked` arguments.
 
+`rhttp/Cargo.toml` and `rhttp/Cargo.lock` pin the Rust bridge runtime and macros to upstream revision [`d59f05b6b0da3606933385f80cbd9e21cc35b59c`](https://github.com/fzyzcjy/flutter_rust_bridge/commit/d59f05b6b0da3606933385f80cbd9e21cc35b59c), retaining version `2.11.1` and fixing native crashes when Dart callbacks return after cancellation. Preparation applies these files after verifying and extracting the upstream package, then computes the new source hash. All other dependencies retain their original locked versions.
+
 ## Build platforms
 
 | Build environment | Rust targets | Native files |
@@ -69,7 +71,7 @@ python scripts/prepare_rhttp.py --check-output dist
 
 1. Update `rhttp/lock.json`, `rhttp/cargokit.yaml`, and the corresponding SDK, Rust, and workflow configuration.
 2. Verify the upstream tool dependency lock and native builds using the pinned SDK and `pub.dev`.
-3. Synchronize `lock.json` and `cargokit.yaml` with the application's `native/prebuilts/rhttp/`, and update the corresponding upstream Cargokit source digests in the application's preparation script.
+3. Synchronize `lock.json`, `cargokit.yaml`, `Cargo.toml`, and `Cargo.lock` with the application's `native/prebuilts/rhttp/`; when upgrading Cargokit, update the corresponding source digests in the application's preparation script.
 4. Publish every target in `precompiled_<crateHash>` before building the application. Source, Cargo lock, build arguments, and public-key changes alter the hash.
 
 The application runs `dart tool/prepare_rhttp_prebuilt.dart` after `flutter pub get` to configure the resolved package and disable rhttp source fallback. Local application development uses a project-specific `.pub-cache`; see its build guide. The main repository continues to build and sign application packages.

@@ -233,6 +233,10 @@ def prepare(repo_root: Path) -> dict:
     cargokit_yaml_src = repo_root / "rhttp" / "cargokit.yaml"
     manifest_dir = package_dir / "rust"
 
+    # Pin the ABI-compatible bridge fix before computing the artifact hash.
+    for name in ("Cargo.toml", "Cargo.lock"):
+        shutil.copy2(repo_root / "rhttp" / name, manifest_dir / name)
+
     if not cargokit_yaml_src.is_file():
         raise FileNotFoundError(f"Missing source cargokit.yaml at: {cargokit_yaml_src}")
 
