@@ -4,9 +4,9 @@
 
 为 [Venera-Plus](https://github.com/Venera-Works/Venera-Plus) 预编译并发布 `rhttp 0.15.1` 原生库。应用构建通过 Cargokit 按源码 hash 下载产物并验证 Ed25519 签名，缺包或验签失败时停止，不再现场编译 rhttp。
 
-`rhttp/lock.json` 固定源归档 SHA-256、Dart 3.11.1（对应应用 Flutter 3.41.4）、Rust 1.85.1、FRB 2.11.1、Android NDK 28.0.13004108 和最低 API 21。`rhttp/cargokit.yaml` 固定公钥、发布地址及 `cargo --locked` 参数。
+`rhttp/lock.json` 固定源归档 SHA-256、Dart 3.11.1（对应应用 Flutter 3.41.4）、Rust 1.88.0、FRB 2.11.1、Android NDK 28.0.13004108 和最低 API 21。`time 0.3.47` 的最低 Rust 版本为 1.88，原生工具链和各平台 CI 因此统一升级。`rhttp/cargokit.yaml` 固定公钥、发布地址及 `cargo --locked` 参数。
 
-`rhttp/Cargo.toml` 与 `rhttp/Cargo.lock` 将 Rust 桥接运行库及宏固定到上游提交 [`d59f05b6b0da3606933385f80cbd9e21cc35b59c`](https://github.com/fzyzcjy/flutter_rust_bridge/commit/d59f05b6b0da3606933385f80cbd9e21cc35b59c)，保持 `2.11.1` 版本，修复取消请求后迟到的 Dart 回调触发原生崩溃。准备脚本解压并验证上游包后应用这两份文件，再计算新的源码 hash；其余依赖沿用原锁定版本。
+`rhttp/Cargo.toml` 与 `rhttp/Cargo.lock` 将 Rust 桥接运行库及宏固定到上游提交 [`d59f05b6b0da3606933385f80cbd9e21cc35b59c`](https://github.com/fzyzcjy/flutter_rust_bridge/commit/d59f05b6b0da3606933385f80cbd9e21cc35b59c)，保持 `2.11.1` 版本，修复取消请求后迟到的 Dart 回调触发原生崩溃。准备脚本解压并验证上游包后应用这两份文件，再计算新的源码 hash。安全更新及锁定版本见 [原生依赖说明](rhttp/README.md)。
 
 ## 构建平台
 

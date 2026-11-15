@@ -37,10 +37,10 @@ jobs:
         with:
           sdk: ${{ steps.prepare.outputs.dart_version }}
           architecture: ${{ runner.arch == 'ARM64' && 'arm64' || 'x64' }}
-      - name: 配置 Rust 1.85.1 及 Android 目标架构
+      - name: 配置 Rust 1.88.0 及 Android 目标架构
         run: |
-          rustup toolchain install 1.85.1 --profile minimal
-          rustup default 1.85.1
+          rustup toolchain install 1.88.0 --profile minimal
+          rustup default 1.88.0
           rustup target add \
             armv7-linux-androideabi \
             aarch64-linux-android \
@@ -94,11 +94,11 @@ jobs:
         with:
           sdk: ${{ steps.prepare.outputs.dart_version }}
           architecture: ${{ runner.arch == 'ARM64' && 'arm64' || 'x64' }}
-      - name: 配置 Rust 1.85.1 及 Windows 目标架构
+      - name: 配置 Rust 1.88.0 及 Windows 目标架构
         shell: bash
         run: |
-          rustup toolchain install 1.85.1 --profile minimal
-          rustup default 1.85.1
+          rustup toolchain install 1.88.0 --profile minimal
+          rustup default 1.88.0
           rustup target add x86_64-pc-windows-msvc
       - name: 安装 Cargokit 构建工具依赖
         working-directory: ${{ steps.prepare.outputs.tool_dir }}
@@ -135,10 +135,10 @@ jobs:
         with:
           sdk: ${{ steps.prepare.outputs.dart_version }}
           architecture: ${{ runner.arch == 'ARM64' && 'arm64' || 'x64' }}
-      - name: 配置 Rust 1.85.1 及 Linux x64 目标架构
+      - name: 配置 Rust 1.88.0 及 Linux x64 目标架构
         run: |
-          rustup toolchain install 1.85.1 --profile minimal
-          rustup default 1.85.1
+          rustup toolchain install 1.88.0 --profile minimal
+          rustup default 1.88.0
           rustup target add x86_64-unknown-linux-gnu
       - name: 安装 Cargokit 构建工具依赖
         working-directory: ${{ steps.prepare.outputs.tool_dir }}
@@ -174,10 +174,10 @@ jobs:
         with:
           sdk: ${{ steps.prepare.outputs.dart_version }}
           architecture: ${{ runner.arch == 'ARM64' && 'arm64' || 'x64' }}
-      - name: 配置 Rust 1.85.1 及 Linux arm64 目标架构
+      - name: 配置 Rust 1.88.0 及 Linux arm64 目标架构
         run: |
-          rustup toolchain install 1.85.1 --profile minimal
-          rustup default 1.85.1
+          rustup toolchain install 1.88.0 --profile minimal
+          rustup default 1.88.0
           rustup target add aarch64-unknown-linux-gnu
       - name: 安装 Cargokit 构建工具依赖
         working-directory: ${{ steps.prepare.outputs.tool_dir }}
@@ -215,10 +215,10 @@ jobs:
         with:
           sdk: ${{ steps.prepare.outputs.dart_version }}
           architecture: ${{ runner.arch == 'ARM64' && 'arm64' || 'x64' }}
-      - name: 配置 Rust 1.85.1 及 Apple 目标架构
+      - name: 配置 Rust 1.88.0 及 Apple 目标架构
         run: |
-          rustup toolchain install 1.85.1 --profile minimal
-          rustup default 1.85.1
+          rustup toolchain install 1.88.0 --profile minimal
+          rustup default 1.88.0
           rustup target add \
             x86_64-apple-darwin \
             aarch64-apple-darwin \
@@ -283,7 +283,7 @@ jobs:
 
           - **包名与版本**: \`rhttp 0.15.1\`
           - **Cargokit CrateHash**: \`${{ steps.prepare.outputs.crate_hash }}\`
-          - **Rust 工具链**: \`1.85.1\`
+          - **Rust 工具链**: \`1.88.0\`
           - **Dart 工具链**: \`${{ steps.prepare.outputs.dart_version }}\`
           - **应用 Flutter 版本**: \`${{ steps.prepare.outputs.flutter_version }}\`
           - **Android NDK**: \`28.0.13004108\` (Min SDK 21)

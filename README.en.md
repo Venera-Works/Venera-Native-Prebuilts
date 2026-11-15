@@ -4,9 +4,9 @@
 
 Builds and releases the `rhttp 0.15.1` native libraries used by [Venera-Plus](https://github.com/Venera-Works/Venera-Plus). Application builds use Cargokit to download artifacts by source hash and verify their Ed25519 signatures. Missing or invalid artifacts fail instead of compiling rhttp locally.
 
-`rhttp/lock.json` pins the source archive SHA-256, Dart 3.11.1 (matching the application's Flutter 3.41.4), Rust 1.85.1, FRB 2.11.1, Android NDK 28.0.13004108, and minimum API 21. `rhttp/cargokit.yaml` pins the public key, release URL, and `cargo --locked` arguments.
+`rhttp/lock.json` pins the source archive SHA-256, Dart 3.11.1 (matching the application's Flutter 3.41.4), Rust 1.88.0, FRB 2.11.1, Android NDK 28.0.13004108, and minimum API 21. The native toolchain and all platform CI jobs use Rust 1.88 because `time 0.3.47` requires it. `rhttp/cargokit.yaml` pins the public key, release URL, and `cargo --locked` arguments.
 
-`rhttp/Cargo.toml` and `rhttp/Cargo.lock` pin the Rust bridge runtime and macros to upstream revision [`d59f05b6b0da3606933385f80cbd9e21cc35b59c`](https://github.com/fzyzcjy/flutter_rust_bridge/commit/d59f05b6b0da3606933385f80cbd9e21cc35b59c), retaining version `2.11.1` and fixing native crashes when Dart callbacks return after cancellation. Preparation applies these files after verifying and extracting the upstream package, then computes the new source hash. All other dependencies retain their original locked versions.
+`rhttp/Cargo.toml` and `rhttp/Cargo.lock` pin the Rust bridge runtime and macros to upstream revision [`d59f05b6b0da3606933385f80cbd9e21cc35b59c`](https://github.com/fzyzcjy/flutter_rust_bridge/commit/d59f05b6b0da3606933385f80cbd9e21cc35b59c), retaining version `2.11.1` and fixing native crashes when Dart callbacks return after cancellation. Preparation applies these files after verifying and extracting the upstream package, then computes the new source hash. See the [native dependency notes](rhttp/README.md) for security updates and pinned versions.
 
 ## Build platforms
 
